@@ -6,14 +6,22 @@ import { UserService } from 'src/user/user.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from 'src/user/schemas/user.schema';
 import { LocalStratege } from './strategies/local-stratege';
+import { JwtStrategy } from './strategies/jwt-strategy';
+import { RefreshJwtStrategy } from './strategies/refreshToken.strategy';
 
 @Module({
-  providers: [AuthService, UserService, LocalStratege],
+  providers: [
+    AuthService,
+    UserService,
+    JwtStrategy,
+    RefreshJwtStrategy,
+    LocalStratege,
+  ],
   controllers: [AuthController],
   imports: [
     JwtModule.register({
       secret: `${process.env.JWT_SECRET}`,
-      signOptions: { expiresIn: '3600s' },
+      signOptions: { expiresIn: '60' },
     }),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],

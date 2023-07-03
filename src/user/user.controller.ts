@@ -7,11 +7,13 @@ import {
   Res,
   Put,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/CreateUserDto';
 import { UserService } from './user.service';
 import { CommentService } from 'src/comment/comment.service';
 import { UpdateUserDto } from './dto/UpdateUserDto';
+import { JwtStrategy } from 'src/auth/strategies/jwt-strategy';
 
 @Controller('users')
 export class UserController {
@@ -45,7 +47,7 @@ export class UserController {
       return response.status(err.status).json(err.response);
     }
   }
-
+  @UseGuards(JwtStrategy)
   @Get(':id/comments')
   getUserComment(@Param('id') id: string) {
     return this.commentService.findUserComments(id);
